@@ -1,0 +1,7 @@
+plugin.tx_solrwidget{
+	view {
+		templateRootPath = EXT:solrwidget/Resources/Private/Templates
+		partialRootPath = EXT:solrwidget/Resources/Private/Partials
+		layoutRootPath = EXT:solrwidget/Resources/Private/Layouts
+	}
+}
