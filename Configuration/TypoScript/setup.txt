@@ -5,3 +5,5 @@ plugin.tx_solrwidget{
 		layoutRootPath = EXT:solrwidget/Resources/Private/Layouts
 	}
 }
+
+page.includeJS.solrwidget = EXT:solrwidget/Resources/Public/Javascript/Initialisation.js

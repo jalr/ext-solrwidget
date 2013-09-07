@@ -1,3 +1,10 @@
 <f:section name="Form">
-	FORM
+	<form action="{f:widget.uri(action: 'search', arguments: {query: '###QUERY###'})}" class="solrwidget-form">
+		<div class="input-append">
+			<input name="query" type="text" />
+			<button type="submit" class="btn">
+				SEARCH
+			</button>
+		</div>
+	</form>
 </f:section>
