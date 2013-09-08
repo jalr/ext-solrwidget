@@ -10,11 +10,11 @@ jQuery(document).ready(function($) {
 			url = url.replace('%23%23%23QUERY%23%23%23', query);
 			$('.popover').remove();
 			field.parent().addClass('info');
-			submit.addClass('btn-info');
+			submit.addClass('btn-info').button('loading');
 			document.location.hash = query;
 			$.getJSON(url, function(response) {
 				field.parent().removeClass('info');
-				submit.removeClass('btn-info');
+				submit.removeClass('btn-info').button('reset');
 				if (response.error) {
 					field.parent().addClass('error');
 					submit.addClass('btn-danger');
