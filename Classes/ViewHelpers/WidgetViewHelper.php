@@ -3,6 +3,11 @@
 class Tx_Solrwidget_ViewHelpers_WidgetViewHelper extends Tx_Fluid_Core_Widget_AbstractWidgetViewHelper {
 
 	/**
+	 * @var Tx_Extbase_Object_ObjectManagerInterface
+	 */
+	protected $objectManagerNative;
+
+	/**
 	 * If set to TRUE, it is an AJAX widget.
 	 *
 	 * @var boolean
@@ -14,6 +19,14 @@ class Tx_Solrwidget_ViewHelpers_WidgetViewHelper extends Tx_Fluid_Core_Widget_Ab
 	 * @var Tx_Solrwidget_Controller_WidgetController
 	 */
 	protected $controller;
+
+	/**
+	 * @param Tx_Extbase_Object_ObjectManagerInterface $objectManager
+	 * @return void
+	 */
+	public function injectObjectManagerNative(Tx_Extbase_Object_ObjectManagerInterface $objectManager) {
+		$this->objectManagerNative = $objectManager;
+	}
 
 	/**
 	 * Initialize this ViewHelper instance
@@ -33,10 +46,10 @@ class Tx_Solrwidget_ViewHelpers_WidgetViewHelper extends Tx_Fluid_Core_Widget_Ab
 		// fallback enabled for Singleton Controllers; however, the initializeContorller method is
 		// also enabled for use by classes which have not yet removed their controller inject methods.
 		if (method_exists($this, 'injectController') && is_a($controllerClassName, 't3lib_Singleton')) {
-			$controllerInstance = $this->objectManager->get($controllerClassName);
+			$controllerInstance = $this->objectManagerNative->get($controllerClassName);
 			$this->injectController($controllerInstance);
 		} else {
-			$controllerInstance = $this->objectManager->create($controllerClassName);
+			$controllerInstance = $this->objectManagerNative->get($controllerClassName);
 		}
 		$this->controller = $controllerInstance;
 	}
