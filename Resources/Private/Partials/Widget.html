@@ -1,9 +1,11 @@
 <f:section name="Form">
-	<form action="{f:widget.uri(action: 'search', arguments: {query: '###QUERY###'})}" class="solrwidget-form" autocomplete="off">
+	<form action="{f:widget.uri(action: 'search', arguments: {query: '###QUERY###'})}" class="solrwidget-form" autocomplete="off"
+	      data-result-formatter="window.solrwidget.displayResults" data-result-label="{f:translate(key: 'results')}"
+		  data-result-noresults="{f:translate(key: 'noresults')}">
 		<div class="control-group input-append">
 			<input name="query" type="text" />
-			<button type="submit" class="btn" data-loading-text="Searching...">
-				SEARCH
+			<button type="submit" class="btn" data-loading-text="{f:translate(key: 'searching')}">
+				<f:translate key="search" />
 			</button>
 		</div>
 		<div class="result-template" style="display: none;">
