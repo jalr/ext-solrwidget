@@ -1,12 +1,14 @@
 <?php
 
-abstract class Tx_Solrwidget_Utility_SolrResultFormatter {
+namespace ApacheSolrForTypo3\Solrwidget\Utility;
+
+abstract class SolrResultFormatter {
 
 	/**
-	 * @param Apache_Solr_Response $response
+	 * @param \Apache_Solr_Response $response
 	 * @return array
 	 */
-	public static function format(Apache_Solr_Response $response) {
+	public static function format(\Apache_Solr_Response $response) {
 		$status = $response->getHttpStatus();
 		if (100 > $status || 400 <= $status) {
 			return array(

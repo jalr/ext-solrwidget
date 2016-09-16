@@ -1,40 +1,47 @@
 <?php
 
-class Tx_Solrwidget_QueryProvider_InitialQueryProvider implements Tx_Solrwidget_QueryProvider_QueryProviderInterface {
+namespace ApacheSolrForTypo3\Solrwidget\QueryProvider;
+
+use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
+use ApacheSolrForTypo3\Solr\Query;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
+
+class InitialQueryProvider implements QueryProviderInterface {
 
 	/**
-	 * @var Tx_Extbase_Object_ObjectManagerInterface
+	 * @var ObjectManagerInterface
 	 */
 	protected $objectManager;
 
 	/**
-	 * @param Tx_Extbase_Object_ObjectManagerInterface $objectManager
+	 * @param ObjectManagerInterface $objectManager
 	 * @return void
 	 */
-	public function injectObjectManager(Tx_Extbase_Object_ObjectManagerInterface $objectManager) {
+	public function injectObjectManager(ObjectManagerInterface $objectManager) {
 		$this->objectManager = $objectManager;
 	}
 
 	/**
 	 * @param string $queryString
-	 * @param tx_solr_Query $originalQuery
+	 * @param Query $originalQuery
 	 * @return string
 	 */
 	public function getTitle($queryString, $originalQuery) {
-		$label = Tx_Extbase_Utility_Localization::translate('initialQueryGroupTitle', 'Solrwidget');
+		$label = LocalizationUtility::translate('initialQueryGroupTitle', 'Solrwidget');
 		return NULL === $label ? 'Default' : $label;
 	}
 
 	/**
 	 * @param string $queryString
-	 * @param tx_solr_Query $originalQuery
-	 * @return tx_solr_Query
+	 * @param Query $originalQuery
+	 * @return Query
 	 */
 	public function processQuery($queryString, $originalQuery) {
-		/** @var tx_solr_Query $query */
-		$query = $this->objectManager->get('tx_solr_Query', $queryString);
+		/** @var Query $query */
+		$query = $this->objectManager->get(Query::class, $queryString);
 		$query->setFieldList(array('title', 'url', 'teaser', 'score'));
-		$query->setUserAccessGroups(t3lib_div::trimExplode(',', $GLOBALS['TSFE']->gr_list));
+		$query->setUserAccessGroups(GeneralUtility::trimExplode(',', $GLOBALS['TSFE']->gr_list));
 		return $query;
 	}
 

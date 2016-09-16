@@ -1,10 +1,15 @@
 <?php
 
+namespace ApacheSolrForTypo3\Solrwidget\Controller;
 
-class Tx_Solrwidget_Controller_WidgetController extends Tx_Fluid_Core_Widget_AbstractWidgetController {
+use TYPO3\CMS\Fluid\Core\Widget\AbstractWidgetController;
+use ApacheSolrForTypo3\Solr\Query;
+use ApacheSolrForTypo3\Solr\Plugin\Results\Results;
+
+class WidgetController extends AbstractWidgetController {
 
 	/**
-	 * @var tx_solr_pi_results
+	 * @var Results
 	 */
 	protected $searcher;
 
@@ -12,8 +17,8 @@ class Tx_Solrwidget_Controller_WidgetController extends Tx_Fluid_Core_Widget_Abs
 	 * @return void
 	 */
 	public function initializeAction() {
-		/** @var tx_solr_pi_results $searcher */
-		$searcher = $this->objectManager->get('tx_solr_pi_results');
+		/** @var Results $searcher */
+		$searcher = $this->objectManager->get(Results::class);
 		$searcher->cObj = $this->configurationManager->getContentObject();
 		$searcher->main('', array());
 		$this->searcher = $searcher;
@@ -34,7 +39,7 @@ class Tx_Solrwidget_Controller_WidgetController extends Tx_Fluid_Core_Widget_Abs
 		$providers = $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['solrwidget']['queryProviders'];
 		$results = array();
 		foreach ($providers as $providerClassName) {
-			/** @var Tx_Solrwidget_QueryProvider_QueryProviderInterface $provider */
+			/** @var \ApacheSolrForTypo3\Solrwidget\QueryProvider\QueryProviderInterface $provider */
 			$provider = $this->objectManager->get($providerClassName);
 			$providedQueryOrNull = $provider->processQuery($query, TRUE === isset($results[0]) ? $results[0] : NULL);
 			if (NULL === $providedQueryOrNull) {
@@ -59,10 +64,10 @@ class Tx_Solrwidget_Controller_WidgetController extends Tx_Fluid_Core_Widget_Abs
 	}
 
 	/**
-	 * @param tx_solr_Query $query
+	 * @param Query $query
 	 * @return mixed
 	 */
-	protected function querySolrServer(tx_solr_Query $query) {
+	protected function querySolrServer(Query $query) {
 		$queryString = $query->getQueryString();
 		$this->searcher->getSearch()->search($query);
 		$response = $this->searcher->getSearch()->getResponse();
@@ -72,7 +77,7 @@ class Tx_Solrwidget_Controller_WidgetController extends Tx_Fluid_Core_Widget_Abs
 			$query->useRawQueryString(TRUE);
 			$response = $this->searcher->getSearch()->search($query);
 		}
-		return Tx_Solrwidget_Utility_SolrResultFormatter::format($response);
+		return \ApacheSolrForTypo3\Solrwidget\Utility\SolrResultFormatter::format($response);
 	}
 
 }

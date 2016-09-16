@@ -1,7 +1,10 @@
 <?php
 
+namespace ApacheSolrForTypo3\Solrwidget\Controller;
 
-class Tx_Solrwidget_Controller_PluginController extends Tx_Extbase_MVC_Controller_ActionController {
+use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
+
+class PluginController extends ActionController {
 
 	/**
 	 * @return void

@@ -109,8 +109,14 @@ entered "product" as first part of their search and then limit results to produc
 In order to achieve this goal you must have a class implementing the proper interface from `EXT:solrwidget`:
 
 ```php
-class Tx_Myext_QueryProvider_DualCategoryQueryProvider
-	implements Tx_Myext_QueryProvider_QueryProviderInterface {
+namespace Myvendor\Myext\QueryProvider;
+
+use ApacheSolrForTypo3\Solr\Query;
+use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
+class DualCategoryQueryProvider
+	implements QueryProviderInterface {
 
 	/**
 	 * Returns a human-readable title/label for this result
@@ -121,11 +127,11 @@ class Tx_Myext_QueryProvider_DualCategoryQueryProvider
 	 * according to which category the first Query is searching.
 	 *
 	 * @param string $queryString User's search query
-     * @param tx_solr_Query $originalQuery NULL or instance of first Query
-     * @return tx_solr_Query|NULL
+     * @param Query $originalQuery NULL or instance of first Query
+     * @return Query|NULL
      */
 	public function getTitle($queryString, $originalQuery) {
-		$label = Tx_Extbase_Utility_Localization::translate('myGroupTitle', 'Myext');
+		$label = LocalizationUtility::translate('myGroupTitle', 'Myext');
 		return NULL === $label ? 'Default label' : $label;
 	}
 
@@ -141,16 +147,16 @@ class Tx_Myext_QueryProvider_DualCategoryQueryProvider
 	 * containing the result of each query.
 	 *
 	 * @param string $queryString User's search query
-	 * @param tx_solr_Query $originalQuery NULL or instance of first Query
-	 * @return tx_solr_Query|NULL
+	 * @param Query $originalQuery NULL or instance of first Query
+	 * @return Query|NULL
 	 */
 	public function processQuery($queryString, $originalQuery) {
 		$firstCategory = 'products';
 		$secondCategory = 'general';
 		// force the Widget's original query to restrict on category:
 		$originalQuery->addFilter('category:' . $firstCategory);
-		// create a second tx_solr_Query instance with second search:
-		$secondQuery = t3lib_div::makeInstance('tx_solr_Query');
+		// create a second Query instance with second search:
+		$secondQuery = GeneralUtility::makeInstance(Query::class);
 		$secondQuery->setQueryString($queryString);
 		$secondQuery->addFilter('category:' . $secondCategory);
 		return $secondQuery;
@@ -164,7 +170,7 @@ To inform `EXT:solrwidget` that you want your QueryProvider taken into considera
 `ext_localconf.php` file:
 
 ```php
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['solrwidget']['queryProviders'][] = 'Tx_Myext_QueryProvider_DualCategoryQueryProvider';
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['solrwidget']['queryProviders'][] = 'Myvendor\\Myext\\QueryProvider\\DualCategoryQueryProvider';
 ```
 
 The search mechanism will then read this object, create an instance and ask it to manipulate the original query and/or return a

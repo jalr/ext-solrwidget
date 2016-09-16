@@ -1,18 +1,22 @@
 <?php
 
-interface Tx_Solrwidget_QueryProvider_QueryProviderInterface {
+namespace ApacheSolrForTypo3\Solrwidget\QueryProvider;
+
+use ApacheSolrForTypo3\Solr\Query;
+
+interface QueryProviderInterface {
 
 	/**
 	 * @param string $queryString
-	 * @param tx_solr_Query $originalQuery
+	 * @param Query $originalQuery
 	 * @return string
 	 */
 	public function getTitle($queryString, $originalQuery);
 
 	/**
 	 * @param string $queryString
-	 * @param tx_solr_Query $originalQuery
-	 * @return tx_solr_Query
+	 * @param Query $originalQuery
+	 * @return Query
 	 */
 	public function processQuery($queryString, $originalQuery);
 

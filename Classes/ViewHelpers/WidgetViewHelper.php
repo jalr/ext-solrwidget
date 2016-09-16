@@ -1,9 +1,14 @@
 <?php
 
-class Tx_Solrwidget_ViewHelpers_WidgetViewHelper extends Tx_Fluid_Core_Widget_AbstractWidgetViewHelper {
+namespace ApacheSolrForTypo3\Solrwidget\ViewHelpers;
+
+use TYPO3\CMS\Fluid\Core\Widget\AbstractWidgetViewHelper;
+use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
+
+class WidgetViewHelper extends AbstractWidgetViewHelper {
 
 	/**
-	 * @var Tx_Extbase_Object_ObjectManagerInterface
+	 * @var ObjectManagerInterface
 	 */
 	protected $objectManagerNative;
 
@@ -16,15 +21,15 @@ class Tx_Solrwidget_ViewHelpers_WidgetViewHelper extends Tx_Fluid_Core_Widget_Ab
 	protected $ajaxWidget = TRUE;
 
 	/**
-	 * @var Tx_Solrwidget_Controller_WidgetController
+	 * @var \ApacheSolrForTypo3\Solrwidget\Controller\WidgetController
 	 */
 	protected $controller;
 
 	/**
-	 * @param Tx_Extbase_Object_ObjectManagerInterface $objectManager
+	 * @param ObjectManagerInterface $objectManager
 	 * @return void
 	 */
-	public function injectObjectManagerNative(Tx_Extbase_Object_ObjectManagerInterface $objectManager) {
+	public function injectObjectManagerNative(ObjectManagerInterface $objectManager) {
 		$this->objectManagerNative = $objectManager;
 	}
 
@@ -34,18 +39,18 @@ class Tx_Solrwidget_ViewHelpers_WidgetViewHelper extends Tx_Fluid_Core_Widget_Ab
 	 * @return void
 	 */
 	public function initialize() {
-		$controllerClassReflection = new ReflectionClass($this);
+		$controllerClassReflection = new \ReflectionClass($this);
 		$methodReflection = $controllerClassReflection->getProperty('controller');
 		$docComment = $methodReflection->getDocComment();
 		$matches = array();
-		preg_match('/@var[\s]{1,}([a-zA-Z_\\^\s]+)/', $docComment, $matches);
+		preg_match('/@var[\s]{1,}[\\\\]?([\\\\0-9a-zA-Z_\\^\s]+)/', $docComment, $matches);
 		$controllerClassName = trim($matches[1]);
 		if (class_exists($controllerClassName) === FALSE) {
-			throw new Exception('Unknown Controller class: ' . $controllerClassName, 1351355695);
+			throw new \Exception('Unknown Controller class: ' . $controllerClassName, 1351355695);
 		}
 		// fallback enabled for Singleton Controllers; however, the initializeContorller method is
 		// also enabled for use by classes which have not yet removed their controller inject methods.
-		if (method_exists($this, 'injectController') && is_a($controllerClassName, 't3lib_Singleton')) {
+		if (method_exists($this, 'injectController') && is_a($controllerClassName, \TYPO3\CMS\Core\SingletonInterface)) {
 			$controllerInstance = $this->objectManagerNative->get($controllerClassName);
 			$this->injectController($controllerInstance);
 		} else {
